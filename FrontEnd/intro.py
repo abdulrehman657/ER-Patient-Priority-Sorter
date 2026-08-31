@@ -219,7 +219,7 @@ st.space(size = 'medium')
 
 st.header ('See It In Action ▼', text_alignment="center")
 
-response = requests.get('http://127.0.0.1:8000/queue')
+response = requests.get('https://er-patient-priority-sorter.fastapicloud.dev/queue')
 queue = response.json()
 esi_labels = {1: "Immediate", 2: "Emergent", 3: "Urgent", 4: "Less Urgent", 5: "Non-Urgent"}
 esi_colors = {1: "#B33A3A", 2: "#C96450",3: "#D98D6F",4: "#E5AE8F",5: "#e9bc79"}
