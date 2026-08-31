@@ -377,7 +377,7 @@ with st.form(key="testing", enter_to_submit=False, border=True, clear_on_submit=
                     'is_immunocompromised': is_immunocompromised_encoded,
                     'num_prior_ed_visits_12m': Prior_ED_Visits,
                 }
-                response = requests.post('http://127.0.0.1:8000/input', json=dictionary)
+                response = requests.post('https://er-patient-priority-sorter.fastapicloud.dev/input', json=dictionary)
                 result = response.json()
                 predicted_esi = result['esi_level']
                 confidence = result['confidence']
