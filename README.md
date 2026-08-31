@@ -39,7 +39,7 @@ This project is a **decision-support layer, not a replacement for clinicians**. 
 ## Live Demo
 
 - **Frontend:** "https://er-patient-priority-sorter.streamlit.app/"
-- **API:** "https://er-patient-priority-sorter.fastapicloud.dev/queue"
+- **API:** "https://er-patient-priority-sorter.fastapicloud.dev/docs"
 
 ## Architecture
 
