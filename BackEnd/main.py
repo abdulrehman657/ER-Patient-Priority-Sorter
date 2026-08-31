@@ -1,15 +1,10 @@
 # import uvicorn
 # from pydantic import BaseModel
-
-from pandas.core.interchange import dataframe
-from pandas.core.interchange import dataframe
-from pandas.core.interchange import dataframe
 from pandas.core.interchange import dataframe
 from fastapi import FastAPI
 from data_model import Input_Variables
 import joblib
 import pandas as pd
-
 
 patient_queue = [
     {
@@ -84,59 +79,56 @@ def queue_with_id(id: int):
     else:
         return 'product not found'
     
-
 @app.post('/input')
 def input(input: Input_Variables):
     global patient_id_counter
 
-    gender_map ={'Male':0,"Female":1,"Other":2}
-    arrival_mode_map = {'Walk-in':0,'Ambulance':1,'Police':2,"Transfer":3}
-    consciousness_level_map = {'Alert':0,'Unresponsive':1,'Pain':2,'Voice':3}
-    chief_complaint_map = {'Chest Pain':0,'Shortness of Breath':1,'Laceration':2,'Fever':3,'Abdominal Pain':4,'Stroke Symptoms':5,'Prescription Refill':6,'Severe Trauma':7}
-    
+    gender_map = {'Male': 0, "Female": 1, "Other": 2}
+    arrival_mode_map = {'Walk-in': 0, 'Ambulance': 1, 'Police': 2, "Transfer": 3}
+    consciousness_level_map = {'Alert': 0, 'Unresponsive': 1, 'Pain': 2, 'Voice': 3}
+    chief_complaint_map = {'Chest Pain': 0, 'Shortness of Breath': 1, 'Laceration': 2, 'Fever': 3, 'Abdominal Pain': 4, 'Stroke Symptoms': 5, 'Prescription Refill': 6, 'Severe Trauma': 7}
+
     gender_encoded = gender_map[input.gender]
     arrival_mode_encoded = arrival_mode_map[input.arrival_mode]
     consciousness_level_encoded = consciousness_level_map[input.consciousness_level]
     chief_complaint_encoded = chief_complaint_map[input.chief_complaint]
 
     df = pd.DataFrame([{
-        
-    'age' : input.age,
-    'gender' : gender_encoded,
-    'arrival_mode' : arrival_mode_encoded,
-    'heart_rate' : input.heart_rate,
-    'systolic_bp' : input.systolic_bp, 
-    'diastolic_bp' : input.diastolic_bp,
-    'respiratory_rate' : input.respiratory_rate,
-    'spo2' : input.spo2,
-    'temperature_c' : input.temperature_c, 
-    'pain_score' : input.pain_score,
-    'gcs_total' : input.gcs_total,
-    'consciousness_level' : consciousness_level_encoded,
-    'chief_complaint' : chief_complaint_encoded,
-    'num_comorbidities' : input.num_comorbidities,
-    'is_immunocompromised' : input.is_immunocompromised, 
-    'num_prior_ed_visits_12m' : input.num_prior_ed_visits_12m,
-
+        'age': input.age,
+        'gender': gender_encoded,
+        'arrival_mode': arrival_mode_encoded,
+        'heart_rate': input.heart_rate,
+        'systolic_bp': input.systolic_bp,
+        'diastolic_bp': input.diastolic_bp,
+        'respiratory_rate': input.respiratory_rate,
+        'spo2': input.spo2,
+        'temperature_c': input.temperature_c,
+        'pain_score': input.pain_score,
+        'gcs_total': input.gcs_total,
+        'consciousness_level': consciousness_level_encoded,
+        'chief_complaint': chief_complaint_encoded,
+        'num_comorbidities': input.num_comorbidities,
+        'is_immunocompromised': input.is_immunocompromised,
+        'num_prior_ed_visits_12m': input.num_prior_ed_visits_12m,
     }])
-
 
     esi_prediction = esi_model.predict(df)
     deterioration_prediction = deterioration_model.predict(df)
     admission_prediction = admission_model.predict(df)
 
-
     probabilities = esi_model.predict_proba(df)[0]
-    
-    record= input.model_dump()
-
+    record = input.model_dump()
     record['id'] = patient_id_counter + 1
     record['esi_level'] = int(esi_prediction[0])
     record['deterioration_risk'] = str(deterioration_prediction[0])
     record['admission_likelihood'] = str(admission_prediction[0])
 
     patient_queue.append(record)
-    
     patient_id_counter += 1
 
-    return {"esi_level": int(esi_prediction[0]), "confidence": float(max(probabilities)),"deterioration_risk": str(deterioration_prediction[0]),"admission_likelihood": str(admission_prediction[0])}
+    return {
+        "esi_level": int(esi_prediction[0]),
+        "confidence": float(max(probabilities)),
+        "deterioration_risk": str(deterioration_prediction[0]),
+        "admission_likelihood": str(admission_prediction[0]),
+    }
