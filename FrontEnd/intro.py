@@ -1,5 +1,3 @@
-from ast import alias
-from ast import Pass
 import streamlit as st 
 import requests
 
