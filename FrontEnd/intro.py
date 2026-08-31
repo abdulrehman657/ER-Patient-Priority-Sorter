@@ -1,6 +1,5 @@
 from ast import alias
 from ast import Pass
-from fastapi.datastructures import Default
 import streamlit as st 
 import requests
 
