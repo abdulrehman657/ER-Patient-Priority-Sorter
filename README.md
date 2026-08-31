@@ -2,8 +2,6 @@
 
 A machine learning system that predicts **Emergency Severity Index (ESI)**, **deterioration risk**, and **admission likelihood** for ER patients — built end-to-end, from synthetic data generation to a live interactive interface.
 
-> ⚠️ **This is a demonstration project.** It is trained on synthetic data, not real hospital records, and has no human-override mechanism. It is not a clinical tool and should never be used to make real triage decisions.
-
 ---
 
 ## Table of Contents
